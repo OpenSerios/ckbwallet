@@ -34,19 +34,20 @@ export default {
       rememberKey: false,
       newPrivateKey: null,
       newPublicKey: null,
-      newAddr: null
+      newAddr: null,
+      keypair: null
     }
   },
   methods: {
     createKey() {
-      const address = generateAddress()
-      this.newPrivateKey = address.privateKey
-      console.log(address)
+      this.keypair = generateAddress()
+      this.newPrivateKey = this.keypair.privateKey
+      console.log(this.keypair)
     },
 
     access() {
       this.$store.state.rememberKey = this.rememberKey
-      this.$store.dispatch('accessWallet', this.newPrivateKey)
+      this.$store.dispatch('accessWallet', this.keypair)
     }
   }
 }

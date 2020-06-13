@@ -9,7 +9,7 @@ import Home from '@/components/home/'
 // import Transfer from '../views/wallet/Transfer.vue';
 // import Advanced from '@/components/wallet/advanced/Advanced.vue'
 // import ManageKeys from '@/components/wallet/keys/ManageKeys.vue'
-// import WalletHome from '@/views/wallet/Home.vue'
+import WalletHome from '@/components/wallet/home.vue'
 
 Vue.use(VueRouter)
 
@@ -23,13 +23,13 @@ const ifNotAuthenticated = (to, from, next) => {
   next('/wallet')
 }
 
-// const ifAuthenticated = (to, from, next) => {
-//   if (store.state.isAuth) {
-//     next()
-//     return
-//   }
-//   next('/')
-// }
+const ifAuthenticated = (to, from, next) => {
+  if (store.state.isAuth) {
+    next()
+    return
+  }
+  next('/')
+}
 
 const routes = [
   {
@@ -63,31 +63,31 @@ const routes = [
     name: 'create',
     component: () => import(/* webpackChunkName: "about" */ '@/components/create/create.vue'),
     beforeEnter: ifNotAuthenticated
+  },
+  {
+    path: '/wallet',
+    children: [
+      {
+        path: '/',
+        name: 'wallet',
+        component: WalletHome
+      }
+      // {
+      //   path: 'transfer',
+      //   component: Transfer
+      // },
+      // {
+      //   path: 'keys',
+      //   component: ManageKeys
+      // },
+      // {
+      //   path: 'advanced',
+      //   component: Advanced
+      // }
+    ],
+    component: () => import(/* webpackChunkName: "login" */ '@/components/wallet/wallet.vue'),
+    beforeEnter: ifAuthenticated
   }
-  // {
-  //   path: '/wallet',
-  //   children: [
-  //     {
-  //       path: '/',
-  //       name: 'wallet',
-  //       component: WalletHome
-  //     },
-  //     {
-  //       path: 'transfer',
-  //       component: Transfer
-  //     },
-  //     {
-  //       path: 'keys',
-  //       component: ManageKeys
-  //     },
-  //     {
-  //       path: 'advanced',
-  //       component: Advanced
-  //     }
-  //   ],
-  //   component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue'),
-  //   beforeEnter: ifAuthenticated
-  // }
 ]
 
 const router = new VueRouter({

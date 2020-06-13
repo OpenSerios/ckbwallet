@@ -8,7 +8,7 @@
         <navbar v-show="isNavbar" />
         <div class="main_cols" :wallet_view="!isNavbar">
           <transition name="fade" mode="out-in">
-            <!-- <sidebar v-if="!isNavbar" class="panel" /> -->
+            <sidebar v-if="!isNavbar" class="panel" />
           </transition>
           <transition name="fade" mode="out-in">
             <router-view id="router_view" />
@@ -26,12 +26,12 @@
 import Notifications from './components/Notifications'
 import Navbar from './components/layout/Navbar'
 // import MainPanel from './components/SidePanels/MainPanel'
-// import Sidebar from './components/wallet/Sidebar'
+import Sidebar from './components/wallet/sidebar'
 import LoadingApp from './components/layout/loading_app'
 
 export default {
   components: {
-    // Sidebar,
+    Sidebar,
     Navbar,
     Notifications,
     // MainPanel,
@@ -42,8 +42,6 @@ export default {
       return this.$store.getters['appReady']
     },
     isNavbar() {
-      // console.log(this.$route);
-      // return this.$store.state.is
       if (this.$route.path.includes('/wallet')) {
         return false
       }

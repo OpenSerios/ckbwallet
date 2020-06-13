@@ -27,7 +27,10 @@ const network_module = {
       state.status = 'connecting'
       ckb.setNode(net.url)
       state.selectedNetwork = net
+      // Set network Type
+      rootState.networkType = net.networkType
       explorer_api.defaults.baseURL = net.explorerUrl
+
       // TODO:Test Node Status
 
       // If authenticated

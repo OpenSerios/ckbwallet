@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      explain: 'Remember private keys.',
+      explain: 'Remember private keys in this browser.',
       isRemember: false
     }
   },
