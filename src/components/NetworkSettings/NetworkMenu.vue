@@ -1,95 +1,96 @@
 <template>
-    <div class="network_menu" :connected="status==='connected'" @keydown.esc="closeMenu">
-        <div class="toggle_but" @click="toggleMenu">
-            <img src="@/assets/network_off.png" v-if="status==='disconnected' || status==='connecting'">
-            <img src="@/assets/network_on.png" v-else>
-            <button v-if="status==='connected'">{{activeNetwork.name}}</button>
-            <button v-else-if="status==='connecting'">Connecting...</button>
-            <button v-else>Disconnected</button>
-        </div>
-        <transition-group name="fade">
-            <div class="network_dispose_bg" v-if="isActive" key="bg" @click="closeMenu"></div>
-            <div class="network_body" v-if="isActive" key="body">
-                <div class="header">
-                    <template v-if="page==='list'">
-                        <h4>Networks</h4>
-                        <button @click="viewCustom">Add Custom</button>
-                    </template>
-                    <template v-if="page==='custom'">
-                        <h4>Add Custom Network</h4>
-                        <button @click="viewList" style="background-color: transparent; color: #3a3144">Cancel</button>
-                    </template>
-                    <template v-if="page==='edit'">
-                        <h4>Edit Network</h4>
-                        <button @click="viewList" style="background-color: transparent; color: #3a3144">Cancel</button>
-                    </template>
-                </div>
-
-                <transition name="fade" mode="out-in">
-                    <ListPage v-if="page==='list'"></ListPage>
-                    <CustomPage v-if="page==='custom'" @add="addCustomNetwork"></CustomPage>
-                    <EditPage v-if="page==='edit'" :net="editNetwork" ></EditPage>
-                </transition>
-
-            </div>
-        </transition-group>
+  <div class="network_menu" :connected="status==='connected'" @keydown.esc="closeMenu">
+    <div class="toggle_but" @click="toggleMenu">
+      <img v-if="status==='disconnected' || status==='connecting'" src="@/assets/network_off.png">
+      <img v-else src="@/assets/network_on.png">
+      <button v-if="status==='connected'">{{ activeNetwork.name }}</button>
+      <button v-else-if="status==='connecting'">Connecting...</button>
+      <button v-else>Disconnected</button>
     </div>
+    <transition-group name="fade">
+      <div v-if="isActive" key="bg" class="network_dispose_bg" @click="closeMenu" />
+      <div v-if="isActive" key="body" class="network_body">
+        <div class="header">
+          <template v-if="page==='list'">
+            <h4>Networks</h4>
+            <button disabled @click="viewCustom">Add Custom</button>
+          </template>
+          <template v-if="page==='custom'">
+            <h4>Add Custom Network</h4>
+            <button style="background-color: transparent; color: #3a3144" @click="viewList">Cancel</button>
+          </template>
+          <template v-if="page==='edit'">
+            <h4>Edit Network</h4>
+            <button style="background-color: transparent; color: #3a3144" @click="viewList">Cancel</button>
+          </template>
+        </div>
+
+        <transition name="fade" mode="out-in">
+          <ListPage v-if="page==='list'" />
+          <CustomPage v-if="page==='custom'" @add="addCustomNetwork" />
+          <EditPage v-if="page==='edit'" :net="editNetwork" />
+        </transition>
+
+      </div>
+    </transition-group>
+  </div>
 </template>
-<script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+<script>
+import 'reflect-metadata'
+// import NetworkRow from './NetworkRow.vue'
+import CustomPage from './CustomPage.vue'
+import ListPage from './ListPage.vue'
+import EditPage from './EditPage.vue'
 
-    import NetworkRow from './NetworkRow.vue';
-    import CustomPage from './CustomPage.vue';
-    import ListPage from './ListPage.vue';
-    import EditPage from "./EditPage.vue";
-    import {CkbNetwork} from "@/js/CkbNetwork";
-
-    @Component({
-        components: {
-            ListPage,
-            NetworkRow,
-            CustomPage,
-            EditPage
-        }
-    })
-    export default class NetworkMenu extends Vue {
-        page: string = 'list';
-        isActive: boolean = false;
-        editNetwork: CkbNetwork|null = null;
-
-        viewCustom(): void{
-            this.page = 'custom';
-        }
-        viewList(): void{
-            this.page = 'list';
-        }
-        closeMenu(): void{
-            this.page = 'list';
-            this.isActive = false;
-        }
-        toggleMenu(): void{
-            this.isActive = !this.isActive;
-        }
-        addCustomNetwork(data: CkbNetwork): void{
-            this.$store.commit('Network/addNetwork', data);
-            this.page = 'list';
-        }
-        onedit(network: CkbNetwork): void{
-            this.editNetwork = network;
-            this.page = 'edit';
-        }
-
-        get status(): string{
-            return this.$store.state.Network.status;
-        }
-        get activeNetwork(): null|CkbNetwork{
-            return this.$store.state.Network.selectedNetwork;
-        }
-        get networks(): CkbNetwork{
-            return this.$store.state.Network.networks;
-        }
+export default {
+  components: {
+    ListPage,
+    // NetworkRow,
+    CustomPage,
+    EditPage
+  },
+  data() {
+    return {
+      page: 'list',
+      isActive: false,
+      editNetwork: null
     }
+  },
+  computed: {
+    status() {
+      return this.$store.state.Network.status
+    },
+    activeNetwork() {
+      return this.$store.state.Network.selectedNetwork
+    },
+    networks() {
+      return this.$store.state.Network.networks
+    }
+  },
+  methods: {
+    viewCustom() {
+      this.page = 'custom'
+    },
+    viewList() {
+      this.page = 'list'
+    },
+    closeMenu() {
+      this.page = 'list'
+      this.isActive = false
+    },
+    toggleMenu() {
+      this.isActive = !this.isActive
+    },
+    addCustomNetwork(data) {
+      this.$store.commit('Network/addNetwork', data)
+      this.page = 'list'
+    },
+    onedit(network) {
+      this.editNetwork = network
+      this.page = 'edit'
+    }
+  }
+}
 </script>
 <style scoped lang="scss">
     @use '../../main';
@@ -109,7 +110,6 @@
             margin-right: 5px;
         }
     }
-
 
     .network_dispose_bg{
         position: fixed;
@@ -150,13 +150,11 @@
         }
     }
 
-
     .network_menu[connected]{
         .toggle_but{
             color: #2960CD;
         }
     }
-
 
     @media only screen and (max-width: main.$mobile_width) {
 
@@ -168,8 +166,6 @@
             left: 0 !important;
         }
     }
-
-
 
     @include main.medium-device {
 

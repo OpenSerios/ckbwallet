@@ -14,19 +14,18 @@
         <label>Explorer API (optional)</label>
         <input v-model="explorer_api" type="text" placeholder="www">
       </div>
-      <div class="rowGroup">
-        <div>
-          <label>Network ID</label>
-          <input v-model="networkId" type="number" placeholder="Network ID">
-        </div>
-        <div>
-          <label>Chain ID</label>
-          <input v-model="chainId" type="text" placeholder="Chain ID">
-        </div>
+      <div>
+        <label>Network Type</label>
+        <v-select
+          v-model="networkType"
+          :items="networkSelection"
+          outlined
+          dense
+        />
       </div>
       <p v-if="err" class="form_error">{{ err }}</p>
       <button @click="saveNetwork">Save Changes</button>
-      <!--            <button @click="deleteNetwork" class="del_button">Delete Network</button>-->
+      <!-- <button @click="deleteNetwork" class="del_button">Delete Network</button> -->
     </form>
   </div>
 </template>
@@ -43,20 +42,19 @@ export default {
     return {
       name: 'My Custom Network',
       url: '',
-      networkId: 12345,
+      networkSelection: ['testnet', 'mainnet'],
+      networkType: 'testnet',
       explorer_api: '',
-      chainId: 'X',
       err: null,
       err_url: ''
     }
   },
   mounted() {
     const net = this.net
-
     this.name = net.name
-    this.url = net.getFullURL()
+    this.url = net.url
     this.networkId = net.networkId
-    this.chainId = net.chainId
+    this.networkType = net.networkType
   },
   methods: {
     checkUrl() {
@@ -113,8 +111,8 @@ export default {
 
       if (!this.name) err = 'You must give the network a name.'
       else if (!this.url) err = 'You must set the URL.'
-      else if (!this.chainId) err = 'You must set the chain id.'
-      else if (!this.networkId) err = 'You must set the network id.'
+      // else if (!this.chainId) err = 'You must set the chain id.'
+      // else if (!this.networkId) err = 'You must set the network id.'
 
       return err
     },
@@ -124,9 +122,9 @@ export default {
     saveNetwork() {
       const net = this.net
       net.name = this.name
-      net.updateURL(this.url)
-      net.networkId = this.networkId
-      net.chainId = this.chainId
+      net.url = this.url
+      net.networkType = this.networkType
+      net.explorer_api = this.explorer_api
 
       this.$parent.page = 'list'
     }

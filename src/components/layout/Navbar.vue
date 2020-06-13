@@ -57,10 +57,12 @@ export default {
       isDrawer: false
     }
   },
-  methods: {
+  computed: {
     isAuth() {
       return this.$store.state.isAuth
-    },
+    }
+  },
+  methods: {
     logout() {
       this.$store.dispatch('logout')
     }
@@ -68,7 +70,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-    @use '../main';
+    @use '../../main';
 
     img{
         max-height: 25px;

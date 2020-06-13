@@ -5,7 +5,7 @@
         <loading-app v-if="!appReady" />
       </transition>
       <template>
-        <!-- <navbar v-show="isNavbar" /> -->
+        <navbar v-show="isNavbar" />
         <div class="main_cols" :wallet_view="!isNavbar">
           <transition name="fade" mode="out-in">
             <!-- <sidebar v-if="!isNavbar" class="panel" /> -->
@@ -24,7 +24,7 @@
 </template>
 <script>
 import Notifications from './components/Notifications'
-// import Navbar from './components/Navbar'
+import Navbar from './components/layout/Navbar'
 // import MainPanel from './components/SidePanels/MainPanel'
 // import Sidebar from './components/wallet/Sidebar'
 import LoadingApp from './components/layout/loading_app'
@@ -32,7 +32,7 @@ import LoadingApp from './components/layout/loading_app'
 export default {
   components: {
     // Sidebar,
-    // Navbar,
+    Navbar,
     Notifications,
     // MainPanel,
     LoadingApp
@@ -53,7 +53,7 @@ export default {
   async created() {
     // const parent = this
     // this.$store.dispatch('Assets/getAllAssets');
-    // this.$store.dispatch('Network/init')
+    this.$store.dispatch('Network/init')
 
     // check session storage
     // if Remember Keys was enabled, get keys and access wallet

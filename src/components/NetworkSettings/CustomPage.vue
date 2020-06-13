@@ -25,7 +25,6 @@
   </div>
 </template>
 <script>
-import { CkbNetwork } from '@/js/CkbNetwork'
 import axios from 'axios'
 
 export default {
@@ -109,15 +108,15 @@ export default {
       }
 
       this.isAjax = true
-      let netID = null
+      // let netID = null
 
       try {
-        const resp = await axios.post(this.url + '/ext/admin', {
+        await axios.post(this.url + '/ext/admin', {
           'jsonrpc': '2.0',
           'id': 1,
           'method': 'admin.getNetworkID'
         })
-        netID = resp.data.result.networkID
+        // netID = resp.data.result.networkID
         this.isAjax = false
       } catch (e) {
         this.isAjax = false
