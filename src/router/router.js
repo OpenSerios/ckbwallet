@@ -37,33 +37,33 @@ const routes = [
     name: 'home',
     component: Home,
     beforeEnter: ifNotAuthenticated
+  },
+  {
+    path: '/access',
+    children: [
+      {
+        path: '/',
+        name: 'access',
+        component: () => import(/* webpackChunkName: "access_pk" */ '@/components/access/Menu.vue')
+      },
+      {
+        path: 'private_key',
+        component: () => import(/* webpackChunkName: "access_pk" */ '@/components/access/AccessString.vue')
+      },
+      {
+        path: 'keystore',
+        component: () => import(/* webpackChunkName: "access_file" */ '@/components/access/KeyStore.vue')
+      }
+    ],
+    component: () => import(/* webpackChunkName: "about" */ '@/components/access/Access.vue'),
+    beforeEnter: ifNotAuthenticated
+  },
+  {
+    path: '/create',
+    name: 'create',
+    component: () => import(/* webpackChunkName: "about" */ '@/components/create/create.vue'),
+    beforeEnter: ifNotAuthenticated
   }
-  // {
-  //   path: '/access',
-  //   children: [
-  //     {
-  //       path: '/',
-  //       name: 'access',
-  //       component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/Menu.vue')
-  //     },
-  //     {
-  //       path: 'private_key',
-  //       component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/AccessString.vue')
-  //     },
-  //     {
-  //       path: 'keystore',
-  //       component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Keystore.vue')
-  //     }
-  //   ],
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/access/Access.vue'),
-  //   beforeEnter: ifNotAuthenticated
-  // },
-  // {
-  //   path: '/create',
-  //   name: 'create',
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/Create.vue'),
-  //   beforeEnter: ifNotAuthenticated
-  // },
   // {
   //   path: '/wallet',
   //   children: [

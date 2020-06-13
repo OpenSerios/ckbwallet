@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <transition name="fade">
         <loading-app v-if="!appReady" />
       </transition>
@@ -18,7 +18,7 @@
           </transition>
         </div>
       </template>
-    </v-content>
+    </v-main>
     <notifications />
   </v-app>
 </template>

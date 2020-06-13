@@ -1,0 +1,95 @@
+<template>
+  <div class="qr_input">
+    <QRReader class="readerIn" @change="change"><button>
+      <fa :icon="fa_camera" />
+    </button></QRReader>
+    <input
+      v-model="pk"
+      type="text"
+      class="pk_in"
+      placeholder="00000CKB00000"
+      @input="oninput"
+    >
+  </div>
+</template>
+<script>
+import QRReader from './QrReader'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faCamera } from '@fortawesome/free-solid-svg-icons'
+export default {
+  components: {
+    QRReader,
+    fa: FontAwesomeIcon
+  },
+  model: {
+    prop: 'value',
+    event: 'change'
+  },
+  props: {
+    // eslint-disable-next-line vue/require-default-prop
+    value: String
+  },
+  data() {
+    return {
+      pk: '',
+      fa_camera: faCamera
+    }
+  },
+  watch: {
+    value(val) {
+      this.pk = val
+    }
+  },
+  mounted() {
+    this.pk = this.value
+  },
+  methods: {
+    change(val) {
+      this.pk = val
+      this.emit()
+    },
+    oninput() {
+      this.pk = this.pk.trim()
+      this.emit()
+    },
+    emit() {
+      this.$emit('change', this.pk)
+    }
+  }
+}
+</script>
+<style scoped>
+    .qr_input{
+        display: flex;
+        align-items: center;
+        color: #333;
+        height: 45px;
+        background-color: #f8f8f8;
+        margin-bottom: 8px;
+    }
+    .qr_input button{
+        font-size: 19px;
+        height: 100%;
+        padding-right: 12px;
+        padding-left: 12px;
+        border-style: none;
+        border-right: 1px solid #d2d2d2;
+        text-align: center;
+        pointer-events: none;
+        opacity: 0.7;
+        /*opacity: 0.7;*/
+    }
+    .readerIn{
+        height: 100%;
+    }
+    .pk_in{
+        background-color: transparent;
+        border-style: none;
+        color: inherit;
+        outline: none;
+        text-align: center;
+        width: 100%;
+        margin: 0;
+        padding: 0px 12px;
+    }
+</style>
