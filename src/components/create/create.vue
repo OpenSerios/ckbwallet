@@ -42,7 +42,6 @@ export default {
     createKey() {
       this.keypair = generateAddress()
       this.newPrivateKey = this.keypair.privateKey
-      console.log(this.keypair)
     },
 
     access() {

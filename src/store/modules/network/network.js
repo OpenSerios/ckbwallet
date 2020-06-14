@@ -46,9 +46,9 @@ const network_module = {
     async init({ state, commit, dispatch }) {
       const netTest = {
         name: 'Aggron TestNet',
-        url: 'http://localhost:8114',
+        url: 'https://aggron.ckb.dev',
         networkType: 'testnet',
-        explorerUrl: 'https://explorer.nervos.org/aggron/'
+        explorerUrl: 'https://explorer.nervos.org/'
       }
       const netMain = {
         name: 'Lina MainNet',

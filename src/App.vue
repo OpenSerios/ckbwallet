@@ -14,7 +14,7 @@
             <router-view id="router_view" />
           </transition>
           <transition name="fade" mode="out-in">
-            <!-- <main-panel v-if="!isNavbar" class="panel" /> -->
+            <main-panel v-if="!isNavbar" class="panel" />
           </transition>
         </div>
       </template>
@@ -25,7 +25,7 @@
 <script>
 import Notifications from './components/Notifications'
 import Navbar from './components/layout/Navbar'
-// import MainPanel from './components/SidePanels/MainPanel'
+import MainPanel from './components/SidePanels/MainPanel'
 import Sidebar from './components/wallet/sidebar'
 import LoadingApp from './components/layout/loading_app'
 
@@ -34,7 +34,7 @@ export default {
     Sidebar,
     Navbar,
     Notifications,
-    // MainPanel,
+    MainPanel,
     LoadingApp
   },
   computed: {

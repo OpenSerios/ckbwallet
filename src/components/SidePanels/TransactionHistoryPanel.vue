@@ -1,68 +1,62 @@
 <template>
-    <div class="tx_history_panel">
-        <div class="header">
-            <h2>Transactions</h2>
-            <a :href="explorerUrl" target="_blank">See All</a>
-        </div>
-        <div class="empty" v-if="!isExplorer">
-            <h4>Explorer API Not Found</h4>
-            <p>You must provide an AVA Explorer API for this network to view transaction history.</p>
-        </div>
-        <div class="empty" v-else-if="isEmpty && !isUpdating">
-            <p>No transactions found for this address on the explorer.</p>
-        </div>
-        <div v-else-if="isUpdating">
-            <p class="empty">Loading transaction history..</p>
-        </div>
-        <div class="list" v-else>
-            <tx-history-row v-for="tx in transactions" :key="tx.id" :transaction="tx">
-            </tx-history-row>
-            <p class="warn">This list might be incomplete and out of order.</p>
-        </div>
+  <div class="tx_history_panel">
+    <div class="header">
+      <h2>Transactions</h2>
+      <a :href="explorerUrl" target="_blank">See All</a>
     </div>
+    <div v-if="!isExplorer" class="empty">
+      <h4>Explorer API Not Found</h4>
+      <p>You must provide an AVA Explorer API for this network to view transaction history.</p>
+    </div>
+    <div v-else-if="isEmpty && !isUpdating" class="empty">
+      <p>No transactions found for this address on the explorer.</p>
+    </div>
+    <div v-else-if="isUpdating">
+      <p class="empty">Loading transaction history..</p>
+    </div>
+    <div v-else class="list">
+      <p v-for="tx in transactions" :key="tx.id" :transaction="tx" />
+      <p class="warn">This list might be incomplete and out of order.</p>
+    </div>
+  </div>
 </template>
 <script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
 
-    import TxHistoryRow from "@/components/SidePanels/TxHistoryRow.vue";
-    import {ITransactionData} from "@/store/modules/history/types";
-    import {AvaNetwork} from "@/js/AvaNetwork";
+// import TxHistoryRow from './TxHistoryRow.vue'
 
-    @Component({
-        components: {
-            TxHistoryRow
-        }
-    })
-    export default class TransactionHistoryPanel extends Vue{
-
-        get isExplorer(): boolean{
-            let network: AvaNetwork|null = this.$store.state.Network.selectedNetwork;
-            if(!network) return false;
-            if(network.explorerUrl){
-                return true;
-            }
-            return false;
-        }
-
-        get isEmpty(): boolean{
-            if(this.transactions.length === 0){
-                return true;
-            }
-            return false;
-        }
-        get isUpdating(): boolean{
-            return this.$store.state.History.isUpdating;
-        }
-        get transactions(): ITransactionData[]{
-            let res =  this.$store.state.History.transactions;
-            return res;
-        }
-        get explorerUrl(): string{
-            let addr = this.$store.state.selectedAddress.split('-')[1];
-            return `https://explorer.ava.network/address/${addr}`;
-        }
+export default {
+  components: {
+    // TxHistoryRow
+  },
+  computed: {
+    isExplorer() {
+      const network = this.$store.state.Network.selectedNetwork
+      if (!network) return false
+      if (network.explorerUrl) {
+        return true
+      }
+      return false
+    },
+    isEmpty() {
+      if (this.transactions.length === 0) {
+        return true
+      }
+      return false
+    },
+    isUpdating() {
+      return this.$store.state.History.isUpdating
+    },
+    transactions() {
+      const res = this.$store.state.History.transactions
+      return res
+    },
+    explorerUrl() {
+      const addr = this.$store.state.selectedAddress.split('-')[1]
+      return `https://explorer.ava.network/address/${addr}`
     }
+  }
+}
+
 </script>
 <style scoped lang="scss">
     @use '../../main';
@@ -109,7 +103,6 @@
         font-weight: bold;
         padding: 15px;
     }
-
 
     @include main.medium-device {
         .header{

@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import CopyText from '@/components/common/CopyText'
+import CopyText from './CopyText'
 import QRModal from '@/components/modals/QRModal'
 import PaperWallet from '@/components/modals/PaperWallet'
 import QRCode from 'qrcode'

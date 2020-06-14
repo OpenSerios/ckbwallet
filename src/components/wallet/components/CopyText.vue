@@ -1,6 +1,6 @@
 <template>
   <div class="copyBut">
-    <button @click="copy"><slot /></button>
+    <button @click="copy" />
     <input ref="copytext" :value="value">
   </div>
 </template>
@@ -44,6 +44,6 @@ export default {
         height: 100%;
         background-size: contain;
         background-position: center;
-        /* background-image: url("/img/copy_icon.png"); */
+        background-image: url("/img/copy_icon.png");
     }
 </style>

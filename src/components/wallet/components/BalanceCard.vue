@@ -9,25 +9,25 @@
         <h4>{{ $t('top.title2') }}</h4>
       </div>
       <div class="balance_row">
-        <p class="balance">{{ balanceText }} AVA</p>
+        <p class="balance">{{ balanceText }} CKB</p>
       </div>
       <div class="alt_info">
         <div>
           <label>Available</label>
-          <p>{{ balanceText }} AVA</p>
+          <p>{{ balanceText }} CKB</p>
         </div>
         <div>
           <label>Shared</label>
-          <p>- AVA</p>
+          <p>- CKB</p>
         </div>
         <div>
           <label>Multisig</label>
-          <p>- AVA</p>
+          <p>- CKB</p>
         </div>
       </div>
     </div>
     <div class="nft_card">
-      <h4>NFTs</h4>
+      <h4>UDTs</h4>
       <p>You have not collected any non fungible tokens.</p>
     </div>
   </div>
@@ -35,12 +35,12 @@
 <script>
 export default {
   computed: {
-    ava_asset() {
-      return this.$store.getters['Assets/AssetAVA']
+    balance() {
+      return this.$store.getters['Assets/Balance']
     },
     balanceText() {
-      if (this.ava_asset !== null) {
-        return this.ava_asset.toString()
+      if (this.balance !== null) {
+        return this.balance
       } else {
         return '-'
       }

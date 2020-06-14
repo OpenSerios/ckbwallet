@@ -2,16 +2,18 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Notifications from './modules/notifications/notification'
 import Address from './modules/address/address'
+import Assets from './modules/asset/asset'
 import Network from './modules/network/network'
+import History from './modules/history/history'
 import router from '@/router/router'
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
-    // Assets,
+    Assets,
     Notifications,
     Network,
-    Address
-    // History,
+    Address,
+    History
     // Address
   },
   state: {
@@ -20,6 +22,7 @@ export default new Vuex.Store({
     privateKey: '',
     addresses: [],
     selectedAddress: '',
+    selectedAddressLockHash: '',
     modals: {},
     networkType: ''
   },
@@ -36,14 +39,15 @@ export default new Vuex.Store({
       await store.dispatch('Address/addKey', keypair)
       store.state.privateKey = keypair.privateKey
       store.state.selectedAddress = (store.state.networkType === 'testnet') ? (keypair.testnetAddress) : (keypair.mainnetAddress)
+      store.state.selectedAddressLockHash = keypair.lockHash
       store.state.isAuth = true
       store.dispatch('onAccess')
     },
     onAccess(store) {
       router.push('/wallet')
       store.dispatch('refreshAddresses')
-      // store.dispatch('Assets/updateUTXOs')
-      // store.dispatch('History/updateTransactionHistory')
+      store.dispatch('Assets/updateUTXOs')
+      store.dispatch('History/updateTransactionHistory')
     },
     async refreshAddresses(store) {
       if (store.state.networkType === 'testnet') {
