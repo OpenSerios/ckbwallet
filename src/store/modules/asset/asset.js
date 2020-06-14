@@ -6,7 +6,6 @@ import Vue from 'vue'
 const assets_module = {
   namespaced: true,
   state: {
-    AVA_ASSET_ID: null,
     isUpdateBalance: false,
     utxo_set: null,
     cells: [],
@@ -36,6 +35,7 @@ const assets_module = {
       state.utxo_set = null
       state.capacity = null
       state.utxos = []
+      state.cells = []
       state.descriptions = {}
     },
 

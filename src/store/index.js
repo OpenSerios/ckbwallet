@@ -89,7 +89,30 @@ export default new Vuex.Store({
         return false
       }
     },
+    async logout(store) {
+      // Delete keys
+      store.dispatch('removeAllKeys')
+      await store.dispatch('Notifications/add', {
+        title: 'Logout',
+        message: 'You have successfully logged out of your wallet.'
+      })
 
+      // Remove other data
+      store.state.selectedAddress = ''
+      store.state.privateKey = ''
+      store.state.isAuth = false
+      store.state.rememberKey = false
+      store.state.addresses = []
+      store.state.selectedAddressLockHash = ''
+      store.state.networkType = ''
+      // Clear Assets
+      await store.dispatch('Assets/onlogout')
+
+      // Clear session storage
+      sessionStorage.removeItem('pks')
+
+      router.push('/')
+    },
     async accessWalletMultiple({ state, dispatch, store }, pks) {
       for (var i = 0; i < pks.length; i++) {
         const pk = pks[i]
