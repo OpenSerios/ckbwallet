@@ -8,7 +8,7 @@ import Home from '@/components/home/'
 // import History from '../views/wallet/History.vue'
 // import Transfer from '../views/wallet/Transfer.vue';
 // import Advanced from '@/components/wallet/advanced/Advanced.vue'
-// import ManageKeys from '@/components/wallet/keys/ManageKeys.vue'
+import ManageKeys from '@/components/wallet/keys/ManageKeys.vue'
 import WalletHome from '@/components/wallet/home.vue'
 
 Vue.use(VueRouter)
@@ -71,15 +71,15 @@ const routes = [
         path: '/',
         name: 'wallet',
         component: WalletHome
-      }
+      },
       // {
       //   path: 'transfer',
       //   component: Transfer
       // },
-      // {
-      //   path: 'keys',
-      //   component: ManageKeys
-      // },
+      {
+        path: 'keys',
+        component: ManageKeys
+      }
       // {
       //   path: 'advanced',
       //   component: Advanced

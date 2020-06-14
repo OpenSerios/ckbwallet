@@ -49,21 +49,20 @@ export default {
     }
   },
   async created() {
-    // const parent = this
+    const parent = this
     // this.$store.dispatch('Assets/getAllAssets');
     this.$store.dispatch('Network/init')
-
     // check session storage
     // if Remember Keys was enabled, get keys and access wallet
-    // this.$store.dispatch('autoAccess').then((res) => {
-    //   if (res) {
-    //     parent.$store.dispatch('Notifications/add', {
-    //       title: 'Keys Remembered',
-    //       message: 'Your stored keys are used to log you in.',
-    //       type: 'success'
-    //     })
-    //   }
-    // })
+    this.$store.dispatch('autoAccess').then((res) => {
+      if (res) {
+        parent.$store.dispatch('Notifications/add', {
+          title: 'Keys Remembered',
+          message: 'Your stored keys are used to log you in.',
+          type: 'success'
+        })
+      }
+    })
   }
 }
 </script>

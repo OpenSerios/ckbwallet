@@ -46,7 +46,7 @@ export default {
 
     access() {
       this.$store.state.rememberKey = this.rememberKey
-      this.$store.dispatch('accessWallet', this.keypair)
+      this.$store.dispatch('accessWallet', this.keypair.privateKey)
     }
   }
 }

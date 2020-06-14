@@ -1,7 +1,7 @@
 <template>
   <div class="addr_card">
     <q-r-modal ref="qr_modal" />
-    <paper-wallet ref="print_modal" />
+    <!-- <paper-wallet ref="print_modal" /> -->
 
     <p class="addr_info">This is your address to receive funds.</p>
     <div class="bottom">
@@ -11,7 +11,7 @@
         <p class="sub">Default wallet address</p>
         <div class="buts">
           <button :tooltip="$t('top.hover1')" class="qr_but" @click="viewQRModal" />
-          <button :tooltip="$t('top.hover2')" class="print_but" @click="viewPrintModal" />
+          <!-- <button :tooltip="$t('top.hover2')" class="print_but" @click="viewPrintModal" /> -->
           <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but" />
         </div>
       </div>
@@ -23,13 +23,13 @@
 <script>
 import CopyText from './CopyText'
 import QRModal from '@/components/modals/QRModal'
-import PaperWallet from '@/components/modals/PaperWallet'
+// import PaperWallet from '@/components/modals/PaperWallet'
 import QRCode from 'qrcode'
 
 export default {
   components: {
     CopyText,
-    PaperWallet,
+    // PaperWallet,
     QRModal
   },
   computed: {
@@ -58,7 +58,7 @@ export default {
       this.$refs.qr_modal.open()
     },
     viewPrintModal() {
-      this.$refs.print_modal.open()
+      // this.$refs.print_modal.open()
     },
 
     updateQR() {

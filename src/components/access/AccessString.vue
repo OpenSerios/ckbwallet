@@ -34,8 +34,6 @@ export default {
       this.isLoading = true
       this.$store.state.rememberKey = this.rememberKey
 
-      console.log(this.rememberKey)
-
       try {
         await this.$store.dispatch('accessWallet', this.privateKey)
         parent.isLoading = false
