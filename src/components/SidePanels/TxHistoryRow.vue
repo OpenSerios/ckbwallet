@@ -1,325 +1,160 @@
 <template>
-    <div class="tx_history_row">
-        <div class="icons">
-            <img v-for="url in icons" :src="url" :key="url">
-        </div>
-        <div>
-            <p class="time">
-                {{timeText}}
-                <a :href="explorerUrl" target="_blank"><fa icon="arrow-right"></fa></a>
-            </p>
-            <div class="utxos">
-                <tx-history-value v-for="(amount, assetId) in valList" :key="assetId" :amount="amount" :asset-id="assetId"></tx-history-value>
-            </div>
-        </div>
+  <div class="tx_history_row">
+    <div class="icons">
+      <!-- <img v-for="url in icons" :key="url" :src="url"> -->
     </div>
+    <div>
+      <p class="time">
+        {{ timeText }}
+        <a :href="explorerUrl" target="_blank"><fa icon="arrow-right" /></a>
+      </p>
+      <div class="utxos">
+        <TxHistoryValue :amount="amount" />
+        <p class="warn">This list might be incomplete and out of order.</p>
+      </div>
+    </div>
+  </div>
 </template>
-<script lang="ts">
-    import 'reflect-metadata'
-    import { Vue, Component, Prop } from 'vue-property-decorator'
-
-    import moment from 'moment';
-    import TxHistoryValue from "@/components/SidePanels/TxHistoryValue.vue";
-    import {getAssetIcon} from '@/helpers/helper';
-    import BN from "bn.js";
-    import {ITransactionData} from "@/store/modules/history/types";
-    import {TransactionAssetsDict, TransactionValueDict} from "@/components/SidePanels/types";
-    import {AssetsDict} from "@/store/modules/assets/types";
-    import {AvaNetwork} from "@/js/AvaNetwork";
-
-
-    @Component({
-        components: {
-            TxHistoryValue
-        }
-    })
-    export default class TxHistoryRow extends Vue {
-        @Prop() transaction!: ITransactionData;
-
-
-        get explorerUrl(): string{
-            return `https://explorer.ava.network/tx/${this.transaction.id}`;
-        }
-        get assetsDict(): AssetsDict {
-            return this.$store.state.Assets.assetsDict;
-        }
-
-        get time(){
-            return moment(this.transaction.timestamp);
-        }
-
-        get timeText():string {
-            let now = Date.now();
-            let diff = now - new Date(this.transaction.timestamp).getTime();
-
-            let dayMs = 1000*60*60*24;
-
-            if(diff > dayMs){
-                return this.time.format('MMM DD, YYYY')
-            }
-            return this.time.fromNow();
-        }
-
-
-        get valList(){
-            let ins = this.inValues;
-            let outs = this.outValues;
-
-            let res = JSON.parse(JSON.stringify(outs));
-
-            for(var assetId in ins){
-                let inAmount = ins[assetId] || 0;
-
-                if(res[assetId]){
-                    res[assetId] -= inAmount;
-                }else {
-                    res[assetId] = -1 * inAmount;
-                }
-            }
-
-
-            return res;
-        }
-
-        get assetsList(){
-            let myAddr = this.$store.state.selectedAddress;
-            let inAssets = this.inAssets;
-            let outAssets = this.outAssets;
-
-            let inVals = this.inValues;
-            let outVals = this.outValues;
-
-
-            let res = {};
-
-            // Checking for income
-            for(var id in outVals){
-                let outVal = outVals[id];
-                let inVal = inVals[id];
-                let inAsset = inAssets[id];
-
-
-                let amount = 0;
-
-                if(inVal){
-                    let diff = inVal - outVal;
-                    amount = diff;
-
-                    // Get froms
-
-                    console.log(diff, inAsset.addresses);
-                }else{
-                    // Asset Genesis
-                    amount = outVal;
-                }
-            }
-
-            // Checking for loss
-            for(id in inVals){
-                let outVal = outVals[id];
-                let inVal = inVals[id];
-                let inAsset = inAssets[id];
-
-
-                let amount = 0;
-
-                if(inVal){
-                    let diff = inVal - outVal;
-                    amount = diff;
-
-                    // Get froms
-
-                    console.log(diff, inAsset.addresses);
-                }else{
-                    // Asset Genesis
-                    amount = outVal;
-                }
-            }
-
-
-            return res;
-        }
-
-        get inputTotals(){
-            return this.transaction.inputTotals;
-        }
-
-        get outputTotals(){
-            return this.transaction.inputTotals;
-        }
-        // Which assets are input
-        get inAssets(){
-            let myAddr = this.$store.state.selectedAddress;
-            let addrRaw = myAddr.split('-')[1];
-            let ins = this.transaction.inputs;
-            let res:TransactionAssetsDict = {}; // asset id -> value dict
-
-            // if empty
-            if(!ins){
-                return res;
-            }
-
-            // Order by ASSET ID
-            /*
-                id: {
-                    amount: BN
-                    addresses: string[]
-                }
-
-             */
-
-
-            ins.forEach(inputUtxo => {
-                let out = inputUtxo.output;
-                let addrs = out.addresses;
-                let assetId = out.assetID;
-                let amtBN = new BN(out.amount, 10);
-
-                if(res[assetId]){
-                    let prevAddrs = res[assetId].addresses;
-
-                    res[assetId].amount.iadd(amtBN);
-                    res[assetId].addresses = new Set([...prevAddrs, ...addrs]);
-                }else{
-                    res[assetId] = {
-                        amount: amtBN,
-                        addresses: new Set(addrs)
-                    }
-                }
-            });
-
-            return res;
-        }
-
-        get outAssets(){
-            let myAddr = this.$store.state.selectedAddress;
-            let addrRaw = myAddr.split('-')[1];
-            let outs = this.transaction.outputs;
-            let res:TransactionAssetsDict = {}; // asset id -> value dict
-
-            // if empty
-            if(!outs){
-                return res;
-            }
-
-            // Order by ASSET ID
-            /*
-                id: {
-                    amount: BN
-                    addresses: string[]
-                }
-
-             */
-
-
-            outs.forEach(outputUtxo => {
-                let addrs = outputUtxo.addresses;
-                let assetId = outputUtxo.assetID;
-                let amtBN = new BN(outputUtxo.amount, 10);
-
-                if(res[assetId]){
-                    let prevAddrs = res[assetId].addresses;
-
-                    res[assetId].amount.iadd(amtBN);
-                    res[assetId].addresses = new Set([...prevAddrs, ...addrs]);
-                }else{
-                    res[assetId] = {
-                        amount: amtBN,
-                        addresses: new Set(addrs)
-                    }
-                }
-            });
-
-            return res;
-        }
-
-        // What did I loose?
-        get inValues(){
-            let myAddr = this.$store.state.selectedAddress;
-            let addrRaw = myAddr.split('-')[1];
-            let ins = this.transaction.inputs;
-            let res:TransactionValueDict = {}; // asset id -> value dict
-
-            // if empty
-            if(!ins){
-                return res;
-            }
-
-            // Order by ASSET ID
-            /*
-                id: {
-                    amount: BN
-                    addresses: string[]
-                }
-             */
-
-
-            ins.forEach(inputUtxo => {
-                let out = inputUtxo.output;
-                let addrs = out.addresses;
-                let assetId = out.assetID;
-                let amt = out.amount;
-                let amtBN = new BN(out.amount, 10)
-
-
-                if(addrs.includes(addrRaw)){
-                    if(res[assetId]){
-                        res[assetId] += parseInt(amt)
-                    }else{
-                        res[assetId] = parseInt(amt)
-                    }
-                }
-            });
-            // console.log(res2);
-
-            return res;
-        }
-
-        // what did I gain?
-        get outValues(){
-            let myAddr = this.$store.state.selectedAddress;
-            let addrRaw = myAddr.split('-')[1];
-            let outs = this.transaction.outputs;
-            let res:TransactionValueDict = {}; // asset id -> value dict
-
-            // if empty
-            if(!outs){
-                return res;
-            }
-
-            outs.forEach(utxoOut => {
-                let addrs = utxoOut.addresses;
-                let assetId = utxoOut.assetID;
-                let amt = utxoOut.amount;
-
-                if(addrs.includes(addrRaw)){
-
-                    if(res[assetId]){
-                        res[assetId] += parseInt(amt)
-                    }else{
-                        res[assetId] = parseInt(amt)
-                    }
-                }
-            });
-
-            return res;
-        }
-
-
-
-        get icons(){
-
-            // let ids = [];
-            let urls = [];
-            let outs = this.outValues;
-
-            for(var assetId in outs){
-                // ids.push(assetId);
-                urls.push(getAssetIcon(assetId))
-            }
-            return urls;
-        }
+<script>
+import Big from 'big.js'
+import moment from 'moment'
+import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
+// import BN from 'bn.js'
+
+export default {
+  components: {
+    TxHistoryValue
+  },
+  props: {
+    transaction: {
+      type: Object,
+      default: () => {}
     }
+  },
+  data() {
+    return {
+
+    }
+  },
+  computed: {
+    explorerUrl() {
+      return `https://explorer.nervos.org/aggron/transaction/${this.transaction.hash}`
+    },
+    assetsDict() {
+      return this.$store.state.Assets.assetsDict
+    },
+    time() {
+      return moment(this.transaction.timestamp)
+    },
+    blake160() {
+      return this.$store.state.blake160
+    },
+    timeText() {
+      const now = Date.now()
+      const diff = now - new Date(this.transaction.timestamp).getTime()
+
+      const dayMs = 1000 * 60 * 60 * 24
+
+      if (diff > dayMs) {
+        return this.time.format('MMM DD, YYYY')
+      }
+      return this.time.fromNow()
+    },
+    amount() {
+      const ins = new Big(this.inValues)
+      const outs = new Big(this.outValues)
+
+      const amount = outs - ins
+      console.log(amount.toString())
+      //   for (var assetId in ins) {
+      //     const inAmount = ins[assetId] || 0
+
+      //     if (res[assetId]) {
+      //       res[assetId] -= inAmount
+      //     } else {
+      //       res[assetId] = -1 * inAmount
+      //     }
+      //   }
+
+      return amount.toString
+    },
+    // assetsList() {
+    //   const myAddr = this.$store.state.selectedAddress
+    //   const inAssets = this.inAssets
+    //   const outAssets = this.outAssets
+
+    //   const inVals = this.inValues
+    //   const outVals = this.outValues
+
+    //   const res = {}
+
+    //   // Checking for income
+    //   for (var id in outVals) {
+    //     const outVal = outVals[id]
+    //     const inVal = inVals[id]
+    //     const inAsset = inAssets[id]
+
+    //     let amount = 0
+
+    //     if (inVal) {
+    //       const diff = inVal - outVal
+    //       amount = diff
+
+    //       // Get froms
+
+    //       console.log(diff, inAsset.addresses)
+    //     } else {
+    //       // Asset Genesis
+    //       amount = outVal
+    //     }
+    //   }
+
+    //   // Checking for loss
+    //   for (id in inVals) {
+    //     const outVal = outVals[id]
+    //     const inVal = inVals[id]
+    //     const inAsset = inAssets[id]
+
+    //     let amount = 0
+
+    //     if (inVal) {
+    //       const diff = inVal - outVal
+    //       amount = diff
+
+    //       // Get froms
+
+    //       console.log(diff, inAsset.addresses)
+    //     } else {
+    //       // Asset Genesis
+    //       amount = outVal
+    //     }
+    //   }
+
+    //   return res
+    // },
+    inputTotals() {
+      var input = 0
+      for (const i in this.transaction.inputs) {
+        if (this.transaction.inputs[i].lockArgs === this.blake160) {
+          input = this.transaction.inputs[i].capacity + input
+        }
+      }
+      return input
+    },
+    outputTotals() {
+      var output = Big(0)
+      for (const i in this.transaction.outputs) {
+        if (this.transaction.inputs[i].lockArgs === this.blake160) {
+          output = output.add(Big(this.transaction.inputs[i].capacity))
+        }
+      }
+      const value = output.toString()
+      return value
+    }
+  }
+
+}
+
 </script>
 <style scoped lang="scss">
     @use '../../main';
@@ -372,7 +207,6 @@
         white-space: nowrap;
     }
 
-
     @include main.medium-device {
         .icons{
             justify-self: left;
@@ -382,7 +216,6 @@
                 object-fit: contain;
             }
         }
-
 
         .tx_history_row{
             padding: 8px 0px;

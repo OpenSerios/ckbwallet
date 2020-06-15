@@ -1,7 +1,7 @@
 
 import Vue from 'vue'
 // import { ckb } from '@/js/ckb'
-// import { explorer_api } from '@/explorer_api'
+import { explorer_api } from '@/explorer_api'
 
 const assets_module = {
   namespaced: true,
@@ -49,10 +49,17 @@ const assets_module = {
       // 0xfcd7768ed4a3c51c2999d808589fe901474cd336808938088291f8e553776a56
       // ckt1qyqwyhylqyx67rq20w2qt6zr8s5pzzxjf2eqz3s87s
       // const { result } = await ckb.rpc.getCapacityByLockHash('0xfcd7768ed4a3c51c2999d808589fe901474cd336808938088291f8e553776a56')
-      console.log(rootState.selectedAddress)
+      const addr = rootState.selectedAddressLockHash
+
+      // TODO: update history collectively for all the addresses
+      // TODO: or just the selected key?
+      const url = `/address/${addr}`
+
+      const res = await explorer_api.get(url)
       state.isUpdateBalance = false
       // state.capacity = result.capacity || 0
-      state.capacity = 0
+      console.log(res)
+      state.capacity = res.data.capacity
       await dispatch('updateCells')
     },
 

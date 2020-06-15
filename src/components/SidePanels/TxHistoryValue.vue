@@ -1,51 +1,56 @@
 <template>
-    <div class="utxo" :income="isIncome">
-        <p class="action">{{actionText}}</p>
-        <p class="amount">{{amountText}} {{symbolText}}</p>
-    </div>
+  <div class="utxo" :income="isIncome">
+    <p class="action">{{ actionText }}</p>
+    <p class="amount">{{ amountText }} {{ symbolText }}</p>
+  </div>
 </template>
-<script lang="ts">
-    import 'reflect-metadata'
-    import { Vue, Component, Prop } from 'vue-property-decorator'
+<script>
+import Big from 'big.js'
 
-    import Big from 'big.js';
-    import AvaAsset from "@/js/AvaAsset";
-
-    @Component
-    export default class TxHistoryValue extends Vue{
-        @Prop() amount!: number|string;
-        @Prop() assetId!: string;
-
-        get asset(): AvaAsset | undefined{
-            return this.$store.state.Assets.assetsDict[this.assetId];
-        }
-        get isIncome(): boolean{
-            if(this.amount > 0){
-                return true;
-            }
-            return false;
-        }
-        get actionText(): string{
-            if(this.isIncome){
-                return 'Received';
-            }
-            return 'Sent';
-        }
-        get amountText(): string{
-            let asset = this.asset;
-
-            if(!asset) return this.amount.toString();
-
-            let val = Big(this.amount).div(Math.pow(10,asset.denomination));
-            return val.toFixed(asset.denomination);
-        }
-        get symbolText(): string{
-            let asset = this.asset;
-
-            if(!asset) return this.assetId.substring(0,4);
-            return  asset.symbol;
-        }
+export default {
+  props: {
+    amount: {
+      type: String,
+      default: ''
+    },
+    assetId: {
+      type: Number || String,
+      default: 0
     }
+  },
+  computed: {
+    // asset() {
+    //   return this.$store.state.Assets.assetsDict[this.assetId]
+    // },
+    isIncome() {
+      if (this.amount > 0) {
+        return true
+      }
+      return false
+    },
+    actionText() {
+      if (this.isIncome) {
+        return 'Received'
+      }
+      return 'Sent'
+    },
+    amountText() {
+    //   const asset = this.asset
+
+      //   if (!asset) return this.amount.toString()
+
+      const val = Big(this.amount).div(Math.pow(10, 8))
+      return val.toFixed(2)
+    },
+    symbolText() {
+    //   const asset = this.asset
+
+      //   if (!asset) return this.assetId.substring(0, 4)
+      return 'CKB'
+    }
+  }
+
+}
 </script>
 <style scoped lang="scss">
     @use '../../main';

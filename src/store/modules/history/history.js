@@ -21,23 +21,35 @@ const history_module = {
 
       state.isUpdating = true
       console.log('Updating history...')
-
-      const addr = rootState.selectedAddressLockHash
-
-      const page = 1
-      const page_size = 20
+      const blake160 = rootState.blake160
 
       // TODO: update history collectively for all the addresses
       // TODO: or just the selected key?
-
-      const url = (network.networkType === 'testnet')
-        ? (`/testnet/api/vi/address_transactions/${addr}?page=${page}&page_size=${page_size}`)
-        : (`/api/vi/address_transactions/${addr}?page=${page}&page_size=${page_size}`)
-
-      const res = await explorer_api.get(url)
-
+      console.log(blake160)
+      const res = await explorer_api.post(
+        `/cell/getTxHistories`,
+        {
+          'script': {
+            'code_hash': '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+            'hash_type': 'type',
+            'args': blake160
+          },
+          'scriptType': 'lock'
+        }
+      )
+      // const response = await axios.post('http://localhost:8501', {
+      //   jsonrpc: '2.0',
+      //   id: + new Date(),
+      //   method: 'eth_accounts',
+      //   params: {
+      //   },
+      // }, {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*'
+      //   },
+      // })
       const transactions = res.data
-
       state.transactions = transactions
       state.isUpdating = false
     }

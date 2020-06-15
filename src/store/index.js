@@ -23,6 +23,7 @@ export default new Vuex.Store({
     privateKey: '',
     addresses: [],
     selectedAddress: '',
+    blake160: '',
     selectedAddressLockHash: '',
     modals: {},
     networkType: ''
@@ -39,6 +40,7 @@ export default new Vuex.Store({
     async accessWallet(store, pk) {
       const keypair = await store.dispatch('addKey', pk)
       store.state.privateKey = keypair.privateKey
+      store.state.blake160 = keypair.blake160
       store.state.selectedAddress = (store.state.networkType === 'testnet') ? (keypair.testnetAddress) : (keypair.mainnetAddress)
       store.state.selectedAddressLockHash = keypair.lockHash
       store.state.isAuth = true
@@ -104,6 +106,7 @@ export default new Vuex.Store({
       store.state.rememberKey = false
       store.state.addresses = []
       store.state.selectedAddressLockHash = ''
+      store.state.blake160 = ''
       store.state.networkType = ''
       // Clear Assets
       await store.dispatch('Assets/onlogout')
@@ -121,6 +124,7 @@ export default new Vuex.Store({
           state.privateKey = keypair.privateKey
           state.selectedAddress = (state.networkType === 'testnet') ? (keypair.testnetAddress) : (keypair.mainnetAddress)
           state.selectedAddressLockHash = keypair.lockHash
+          state.blake160 = keypair.blake160
         }
       }
       state.isAuth = true

@@ -15,18 +15,19 @@
       <p class="empty">Loading transaction history..</p>
     </div>
     <div v-else class="list">
-      <p v-for="tx in transactions" :key="tx.id" :transaction="tx" />
+      <!-- <p v-for="tx in transactions" :key="tx.hash" :transaction="tx" /> -->
+      <TxHistoryRow v-for="tx in transactions" :key="tx.hash" :transaction="tx" />
       <p class="warn">This list might be incomplete and out of order.</p>
     </div>
   </div>
 </template>
 <script lang="ts">
 
-// import TxHistoryRow from './TxHistoryRow.vue'
+import TxHistoryRow from './TxHistoryRow.vue'
 
 export default {
   components: {
-    // TxHistoryRow
+    TxHistoryRow
   },
   computed: {
     isExplorer() {
@@ -51,8 +52,8 @@ export default {
       return res
     },
     explorerUrl() {
-      const addr = this.$store.state.selectedAddress.split('-')[1]
-      return `https://explorer.ava.network/address/${addr}`
+      const addr = this.$store.state.selectedAddress
+      return `https://explorer.nervos.org/aggron/address/${addr}`
     }
   }
 }

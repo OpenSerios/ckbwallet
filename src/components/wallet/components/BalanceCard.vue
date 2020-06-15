@@ -33,6 +33,7 @@
   </div>
 </template>
 <script>
+import Big from 'big.js'
 export default {
   computed: {
     balance() {
@@ -40,7 +41,8 @@ export default {
     },
     balanceText() {
       if (this.balance !== null) {
-        return this.balance
+        return Big(this.balance).div(Math.pow(10, 8)).toFixed(2)
+        // return Big(this.balance).div(Math.pow(10, 8)).toFixed(8)
       } else {
         return '-'
       }
@@ -89,7 +91,7 @@ export default {
         align-self: center;
     }
     .balance{
-        font-size: 2.8em !important;
+        font-size: 2.0em !important;
         white-space: nowrap;
         /*font-weight: bold;*/
         font-family: Rubik !important;

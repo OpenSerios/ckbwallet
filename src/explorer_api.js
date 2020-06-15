@@ -4,9 +4,9 @@ import axios from 'axios'
 const api_url = 'localhost'
 const explorer_api = axios.create({
   baseURL: api_url,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
-    'Content-Type': 'application/vnd.api+json'
+    'Content-Type': 'application/json'
   }
 })
 

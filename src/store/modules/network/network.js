@@ -48,25 +48,26 @@ const network_module = {
         name: 'Aggron TestNet',
         url: 'https://aggron.ckb.dev',
         networkType: 'testnet',
-        explorerUrl: 'https://explorer.nervos.org/'
+        // explorerUrl: 'https://explorer.nervos.org/'
+        explorerUrl: 'http://106.13.40.34:2333/'
       }
-      const netMain = {
-        name: 'Lina MainNet',
-        url: 'http://localhost:8114',
-        networkType: 'mainnet',
-        explorerUrl: 'https://explorer.nervos.org/'
-      }
+      // const netMain = {
+      //   name: 'Lina MainNet',
+      //   url: 'http://localhost:8114',
+      //   networkType: 'mainnet',
+      //   explorerUrl: 'https://explorer.nervos.org/'
+      // }
 
-      const netLocal = {
-        name: 'Localhost',
-        url: 'http://localhost:8114',
-        networkType: 'testnet',
-        explorerUrl: ''
-      }
+      // const netLocal = {
+      //   name: 'Localhost',
+      //   url: 'http://localhost:8114',
+      //   networkType: 'testnet',
+      //   explorerUrl: ''
+      // }
 
       commit('addNetwork', netTest)
-      commit('addNetwork', netMain)
-      commit('addNetwork', netLocal)
+      // commit('addNetwork', netMain)
+      // commit('addNetwork', netLocal)
       try {
         await dispatch('setNetwork', state.networks[0])
         return true
