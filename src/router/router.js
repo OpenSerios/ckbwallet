@@ -6,7 +6,7 @@ import Home from '@/components/home/'
 // import Transfer from '@/components/wallet/Transfer.vue'
 // import Assets from '../views/wallet/Assets.vue';
 // import History from '../views/wallet/History.vue'
-// import Transfer from '../views/wallet/Transfer.vue';
+import Transfer from '@/components/transfer/transfer.vue'
 // import Advanced from '@/components/wallet/advanced/Advanced.vue'
 import ManageKeys from '@/components/wallet/keys/ManageKeys.vue'
 import WalletHome from '@/components/wallet/home.vue'
@@ -72,10 +72,10 @@ const routes = [
         name: 'wallet',
         component: WalletHome
       },
-      // {
-      //   path: 'transfer',
-      //   component: Transfer
-      // },
+      {
+        path: 'transfer',
+        component: Transfer
+      },
       {
         path: 'keys',
         component: ManageKeys
