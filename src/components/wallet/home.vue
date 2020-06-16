@@ -9,25 +9,25 @@
       <div style="flex-grow: 1" />
       <div class="search">
         <img src="@/assets/search.png">
-        <input v-model="search" placeholder="Search assets..">
+        <input v-model="search" placeholder="Search Assets..">
       </div>
     </div>
     <div class="pages">
       <transition name="fade" mode="out-in">
-        <!-- <fungibles v-if="tab===`fungibles`" key="fungibles" :search="search" />
-        <collectibles v-else key="fungibles" :search="search" /> -->
+        <fungibles v-if="tab===`fungibles`" key="fungibles" :search="search" />
+        <Collectibles v-else key="fungibles" :search="search" />
       </transition>
     </div>
 
   </div>
 </template>
 <script>
-// import Fungibles from '@/components/wallet/home/Fungibles'
-// import Collectibles from '@/components/wallet/home/Collectibles'
+import Fungibles from '@/components/wallet/Fungibles'
+import Collectibles from '@/components/wallet/Collectibles'
 export default {
   components: {
-    // Fungibles,
-    // Collectibles
+    Fungibles,
+    Collectibles
   },
   data() {
     return {
