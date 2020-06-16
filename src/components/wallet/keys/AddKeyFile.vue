@@ -79,7 +79,6 @@ export default {
         }).then(res => {
           parent.isLoading = false
           parent.clear()
-          console.log(res)
         }).catch(err => {
           parent.isLoading = false
           this.err = err.message

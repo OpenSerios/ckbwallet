@@ -17,7 +17,7 @@
     <div v-else class="list">
       <!-- <p v-for="tx in transactions" :key="tx.hash" :transaction="tx" /> -->
       <TxHistoryRow v-for="tx in transactions" :key="tx.hash" :transaction="tx" />
-      <p class="warn">This list might be incomplete and out of order.</p>
+      <!-- <p class="warn">This list might be incomplete and out of order.</p> -->
     </div>
   </div>
 </template>

@@ -58,7 +58,6 @@ const assets_module = {
       const res = await explorer_api.get(url)
       state.isUpdateBalance = false
       // state.capacity = result.capacity || 0
-      console.log(res)
       state.capacity = res.data.capacity
       await dispatch('updateCells')
     },
