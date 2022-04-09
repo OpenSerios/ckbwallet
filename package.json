@@ -36,7 +36,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "jsbi": "^3.1.3",
     "jspdf": "^1.5.3",
-    "moment": "^2.26.0",
+    "moment": "^2.29.2",
     "pdfjs-dist": "^2.4.456",
     "print-js": "^1.0.63",
     "qrcode": "^1.4.4",
